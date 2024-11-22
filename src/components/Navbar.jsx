@@ -37,6 +37,7 @@ const Navbar = () => {
             Contact
           </p>
         </div>
+
         <div className="mt-3 mr-4">
           <BellOutlined className="text-3xl text-[#3d52a0]" />
         </div>

@@ -1,11 +1,13 @@
 import { LoadingOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { SearchContext } from "../Context";
 
 const Content = () => {
   const [weatherData, setWeatherData] = useState(null);
   const API_KEY = import.meta.env.VITE_API_KEY;
-  const city = "malappuram";
   const [isCelsius, setIsCelsius] = useState(true);
+  const { searchText } = useContext(SearchContext);
+  const city = searchText ? searchText : "kerala";
 
   const handleChange = () => {
     setIsCelsius(!isCelsius);
