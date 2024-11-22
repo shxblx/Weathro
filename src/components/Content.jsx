@@ -8,8 +8,7 @@ const Content = () => {
   const [isCelsius, setIsCelsius] = useState(true);
   const { searchText } = useContext(SearchContext);
   const city = searchText ? searchText : "kerala";
-  if(!weatherData){
-    
+  if (!weatherData) {
   }
 
   const handleChange = () => {
