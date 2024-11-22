@@ -7,26 +7,60 @@ const Content = () => {
   const API_KEY = import.meta.env.VITE_API_KEY;
   const [isCelsius, setIsCelsius] = useState(true);
   const { searchText } = useContext(SearchContext);
-  const city = searchText ? searchText : "kerala";
+  const city = searchText ? searchText : "New York";
   if (!weatherData) {
   }
+
+  const [coordinates, setCoordinates] = useState({
+    latitude: null,
+    longitude: null,
+  });
 
   const handleChange = () => {
     setIsCelsius(!isCelsius);
   };
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCoordinates({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting location", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  }, []);
 
   useEffect(() => {
-    fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`
-    )
-      .then((response) => response.json())
-      .then((data) => setWeatherData(data))
-      .catch((error) => console.error(error));
-  }, [API_KEY, city]);
+    const fetchWeatherData = async () => {
+      try {
+        let url;
+        if (coordinates.latitude && coordinates.longitude) {
+          url = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${API_KEY}`;
+        } else {
+          url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
+        }
 
-  // if (weatherData) {
-  //   console.log(weatherData);
-  // }
+        const response = await fetch(url);
+        const data = await response.json();
+        setWeatherData(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchWeatherData();
+  }, [API_KEY, city, coordinates]);
+
+  if (weatherData) {
+    console.log(weatherData);
+  }
   const kelvinToCelsius = (kelvin) => (kelvin - 273.15).toFixed(2);
 
   const kelvinToFahrenheit = (kelvin) =>

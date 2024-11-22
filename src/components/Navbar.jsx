@@ -1,13 +1,14 @@
 import { BellOutlined } from "@ant-design/icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const location = useLocation();
+
   return (
     <>
-      <div className="flex justify-between m-2">
-        <div className="text-[#3d52a0] font-extrabold text-4xl ml-4">
+      <div className="flex justify-between m-2 ">
+        <div className="text-[#3d52a0] font-extrabold text-4xl">
           <p>Weathro</p>
         </div>
         <div className="flex space-x-10 text-[#3d52a0] mt-3 mr-[120px] font-semibold">
