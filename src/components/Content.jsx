@@ -80,52 +80,48 @@ const Content = () => {
               />
             </div>
             <div className="pl-3">
-              <p className="text-[#3d52a0] font-bold text-4xl ">
+              <p className="text-[#3d52a0] text-3xl font-bold md:text-4xl ">
                 {weatherData.name}
               </p>
               <div className="flex space-x-1 mt-2">
                 {isCelsius ? (
-                  <p className="text-[#3d52a0] text-3xl">
+                  <p className="text-[#3d52a0] text-2xl md:text-3xl">
                     {" "}
                     {kelvinToCelsius(weatherData.main.temp)}
                   </p>
                 ) : (
-                  <p className="text-[#3d52a0] text-3xl">
+                  <p className="text-[#3d52a0] text-2xl md:text-3xl">
                     {kelvinToFahrenheit(weatherData.main.temp)}
                   </p>
                 )}
                 <button
                   onClick={handleChange}
-                  className="text-white rounded-lg px-2 text-2xl bg-[#3d52a0] hover:cursor-pointer"
+                  className="text-white rounded-lg px-2 md:text-2xl bg-[#3d52a0] hover:cursor-pointer"
                 >
                   {isCelsius ? "°C" : "°F"}
                 </button>
               </div>
 
-              <p className="text-[#3d52a0] text-3xl ">
+              <p className="text-[#3d52a0] md:text-3xl ">
                 {weatherData.weather[0].main}
               </p>
 
-              <p className="text-[#3d52a0] ">
-                {weatherData.weather[0].description}
-              </p>
-
-              <p className="text-[#3d52a0]">
+              <p className="text-[#3d52a0] text-sm">
                 Feels Like: {kelvinToCelsius(weatherData.main.feels_like)}°C /{" "}
                 {kelvinToFahrenheit(weatherData.main.feels_like)}°F
               </p>
-              <p className="text-[#3d52a0] ">
+              <p className="text-[#3d52a0] text-xs">
                 Ground Level Pressure: {weatherData.main.grnd_level} hPa{" "}
               </p>
 
-              <p className="text-[#3d52a0] ">
+              <p className="text-[#3d52a0] text-xs">
                 Wind Speed: {weatherData.wind.speed} m/s
               </p>
             </div>
           </div>
         </div>
       ) : (
-        <div className="flex items-center h-[600px] justify-center  space-x-4 text-[#3d52a0] text-3xl">
+        <div className="flex items-center h-[600px] justify-center space-x-4 text-[#3d52a0] md:text-3xl">
           <p>Loading</p>
           <LoadingOutlined />
         </div>
