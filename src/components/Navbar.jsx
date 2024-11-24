@@ -42,8 +42,8 @@ const Navbar = () => {
           </p>
         </div>
 
-        <div className="hidden md:mt-3 mr-4">
-          <BellOutlined className="text-3xl text-[#3d52a0]" />
+        <div className=" mt-3 mr-4">
+          <BellOutlined className="hidden md:block text-3xl text-[#3d52a0]" />
         </div>
         {!menuIsOpen ? (
           <div className="md:hidden">
@@ -62,10 +62,11 @@ const Navbar = () => {
         )}
       </div>
       {menuIsOpen && (
-        <div className="bg-white pb-10 pt-5 text-lg font-semibold space-y-6 pl-8 pr-[100px] text-[#3d52a0] rounded-md flex flex-col mt space-y-2">
+        <div className="bg-white pb-10 pt-5 text-lg font-semibold pl-8 pr-[100px] text-[#3d52a0] rounded-md flex flex-col mt space-y-2">
           <p>Menu</p>
           <p>About</p>
           <p>Contact</p>
+          <p>Notifications</p>
         </div>
       )}
     </>

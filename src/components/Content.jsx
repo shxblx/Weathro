@@ -7,26 +7,41 @@ const Content = () => {
   const API_KEY = import.meta.env.VITE_API_KEY;
   const [isCelsius, setIsCelsius] = useState(true);
   const { searchText } = useContext(SearchContext);
-  const city = searchText ? searchText : "New York";
-  if (!weatherData) {
-  }
-
   const [coordinates, setCoordinates] = useState({
     latitude: null,
     longitude: null,
   });
 
+  useEffect(() => {
+    const storedCoordinates = getCoordinates();
+    if (storedCoordinates) {
+      setCoordinates(storedCoordinates);
+    }
+  }, []);
   const handleChange = () => {
     setIsCelsius(!isCelsius);
   };
+
+  const storeCoordinates = (latitude, longitude) => {
+    const coordinates = { latitude, longitude };
+    localStorage.setItem("coordinates", JSON.stringify(coordinates));
+  };
+
+  const getCoordinates = () => {
+    const storedCoordinates = localStorage.getItem("coordinates");
+    if (storedCoordinates) {
+      return JSON.parse(storedCoordinates);
+    }
+    return null;
+  };
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setCoordinates({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
+          const { latitude, longitude } = position.coords;
+          storeCoordinates(latitude, longitude);
+          setCoordinates({ latitude, longitude });
         },
         (error) => {
           console.error("Error getting location", error);
@@ -39,14 +54,17 @@ const Content = () => {
 
   useEffect(() => {
     const fetchWeatherData = async () => {
-      try {
-        let url;
-        if (coordinates.latitude && coordinates.longitude) {
-          url = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${API_KEY}`;
-        } else {
-          url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
-        }
+      let url;
 
+      if (searchText) {
+        url = `https://api.openweathermap.org/data/2.5/weather?q=${searchText}&appid=${API_KEY}`;
+      } else if (coordinates.latitude && coordinates.longitude) {
+        url = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${API_KEY}`;
+      } else {
+        url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
+      }
+
+      try {
         const response = await fetch(url);
         const data = await response.json();
         setWeatherData(data);
@@ -56,23 +74,21 @@ const Content = () => {
     };
 
     fetchWeatherData();
-  }, [API_KEY, city, coordinates]);
+  }, [API_KEY, searchText, coordinates]);
 
   const kelvinToCelsius = (kelvin) => (kelvin - 273.15).toFixed(2);
-
   const kelvinToFahrenheit = (kelvin) =>
     (((kelvin - 273.15) * 9) / 5 + 32).toFixed(2);
 
   return (
     <>
       {weatherData ? (
-        <div className="flex mt-[70px] items-center justify-center">
+        <div className="flex m-[120px] items-center justify-center">
           <div className="flex items-center space-x-4">
             <div className="bg-white rounded-lg">
               <img
-                src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png
-`}
-                className=" wh-96"
+                src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png`}
+                className="wh-96"
                 alt={weatherData.weather[0].description}
               />
             </div>
@@ -83,7 +99,6 @@ const Content = () => {
               <div className="flex space-x-1 mt-2">
                 {isCelsius ? (
                   <p className="text-[#3d52a0] text-2xl md:text-3xl">
-                    {" "}
                     {kelvinToCelsius(weatherData.main.temp)}
                   </p>
                 ) : (
