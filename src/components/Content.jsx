@@ -58,9 +58,6 @@ const Content = () => {
     fetchWeatherData();
   }, [API_KEY, city, coordinates]);
 
-  if (weatherData) {
-    console.log(weatherData);
-  }
   const kelvinToCelsius = (kelvin) => (kelvin - 273.15).toFixed(2);
 
   const kelvinToFahrenheit = (kelvin) =>
